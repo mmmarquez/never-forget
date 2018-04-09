@@ -17,67 +17,45 @@
 if (process.BROWSER_BUILD) {
   require("aframe");
 }
-
-// var googleMapsClient = require("@google/maps").createClient({
-//   key: "your API key here"
-// });
-// const panorama = require("google-panorama-by-location/node.js");
+import socket from "~/plugins/socket.js";
 
 export default {
   data() {
     return {
       location: "",
-      panoId: ""
+      panoId: "",
+      coords: ""
     };
   },
   methods: {
     getLocation() {
+      let vm = this;
+      function showPosition(position) {
+        console.log(position);
+        vm.coords = [
+          position.coords.latitude,
+          position.coords.longitude,
+          position.timestamp
+        ];
+      }
       if (navigator.geolocation) {
-        // navigator.geolocation.getCurrentPosition(getCoords());
-        let vm = this;
-        // this.getPano(position.coords.latitude, position.coords.longitude);
-
-        navigator.geolocation.getCurrentPosition(function(position) {
-          console.log("lol", position.coords);
-        });
-        console.log("h");
+        navigator.geolocation.getCurrentPosition(showPosition);
       } else {
         console.log("Geolocation is not supported by this browser.");
       }
-    },
-    getPano(lat, long) {
-      // 39.309792
-      //
-      panorama(["39.309792", "-76.6293732"], (err, result) => {
-        if (err) throw err;
-        this.panoId = result.id;
+    }
+  },
+  watch: {
+    coords: function(val) {
+      let message = this.coords;
+      socket.emit("last-messages", {
+        message
       });
     }
   },
-  created() {},
   mounted() {
-    var load = require("google-panorama-equirectangular");
-    var panoID = "dXZfBMex9_L7jO2JW3FTdA";
-
+    console.log("lolololol");
     this.getLocation();
-    // this.getPano();
-
-    setTimeout(x => {
-      if (panoID) {
-        load(panoID, { zoom: 2 })
-          .on("start", function(data) {
-            console.log("canvas size: ", data.width, data.height);
-          })
-          .on("progress", function(ev) {
-            console.log("progress: ", ev.count / ev.total);
-          })
-          .on("complete", function(image) {
-            var imagen = document.getElementById("imagen");
-            imagen.appendChild(image);
-            console.log("canvas image: ", image);
-          });
-      }
-    }, 3000);
   }
 };
 </script>
