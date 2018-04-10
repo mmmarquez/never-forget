@@ -1,5 +1,3 @@
-const pkg = require("./package");
-
 module.exports = {
   // mode: "spa",
   // router: {
@@ -10,12 +8,17 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    title: pkg.name,
+    title: "pkg.name",
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { hid: "description", name: "description", content: pkg.description }
+      { hid: "description", name: "description", content: "pkg.description" }
     ],
+    // script: [
+    //   {
+    //     src: "https://cdnjs.cloudflare.com/ajax/libs/aframe/0.7.1/aframe.min.js"
+    //   }
+    // ],
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
   },
 
@@ -39,8 +42,12 @@ module.exports = {
   */
   modules: [
     // Doc: https://github.com/nuxt-community/axios-module#usage
-    "@nuxtjs/axios"
+    "@nuxtjs/axios",
+    "~/io"
   ],
+  env: {
+    WS_URL: process.env.WS_URL || "http://localhost:3000"
+  },
 
   /*
   ** Axios module configuration
@@ -56,6 +63,7 @@ module.exports = {
     /*
     ** You can extend webpack config here
     */
+    vendor: ["aframe"],
     extend(config, ctx) {}
   }
 };
