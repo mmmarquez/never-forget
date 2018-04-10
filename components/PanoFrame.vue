@@ -2,7 +2,7 @@
   <div class="">
     <a-scene>
       <a-assets>
-        <img id="sky" src="/panos/1523336823710_screenshot.png">
+        <img id="sky" :src="`/panos/${this.timestamp}_screenshot.png`">
       </a-assets>
       <a-sky src="#sky"></a-sky>
     </a-scene>
